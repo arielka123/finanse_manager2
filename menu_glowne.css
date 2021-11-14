@@ -1,0 +1,141 @@
+
+body
+{
+	background-image: url("img/hexellence.png");
+	font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+	margin:0;
+	padding: 0;
+	
+}
+
+.topNav1
+{
+	background-color: #334359;
+	color:#f0f0f0;
+}
+
+a
+{
+color: #f0f0f0;	
+text-decoration: none;
+font-weight: 500;
+}
+
+a:hover
+{
+	color: #d0d0d0;	
+}
+
+
+.sticky {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left:0;
+  z-index: 100;
+}
+
+.content
+{
+	float: left;
+	padding:30px;
+	text-align:center;
+	font-size: 20px;
+	font-weight:700;
+	color: #393939;
+}
+
+.pictureContent
+{
+	border-radius: 20px;
+}
+
+
+#komentarz
+{
+	resize: none;
+}
+
+input[type=submit]
+{
+	margin-right: 30px;
+	padding:15px;
+	border: none;
+	border-radius: 20px;
+	letter-spacing: 2px;
+	color: #f0f0f0;
+	background-color: #293e6a;
+	cursor:pointer;
+	transition: all 0.4s ease 0s;
+}
+
+input[type=submit]:hover
+{
+	text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);
+	-webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+	-moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+	transition: all 0.4s ease 0s;
+}
+
+input[type=reset]
+{
+	margin-right: 30px;
+	padding: 15px;
+	border: none;
+	border-radius: 20px;
+	letter-spacing: 2px;
+	color: #f0f0f0;
+	background-color: #9B2335;
+	cursor:pointer;
+	transition: all 0.4s ease 0s;
+}
+
+input[type=reset]:hover
+{
+	text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);
+	-webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+	-moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+	transition: all 0.4s ease 0s;
+}
+
+input[type=text], input[type=date]
+{
+	width: 250px;
+	height: 30px;
+	padding: 5px;
+	margin-left: 10px;
+	border-radius:4px;
+	border: 1px solid gray;
+}
+
+.col_radio
+{
+	padding-right: 2vw;
+}
+
+.icon-edit {  font-size: 20px; padding-right:5px; color: #0fb493} 
+.icon-money {  font-size: 40px; padding:10px; color: #4db6ac} 
+.icon-chart-bar { font-size: 20px; padding-right:5px; color: #0fb493;} 
+.icon-cogs {  font-size: 20px; padding-right:5px; color: #0fb493; }
+.icon-power {  font-size: 20px; margin:0; color: #0fb493;  }
+
+#wybor
+{
+	opacity:0.6;
+	text-align:left;
+	letter-spacing:2px;
+	color: #000000;
+	font-weight:700;
+}
+
+@media(max-width:1200px)
+{
+	.topMenu
+	{
+	font-size:14px;
+	padding:0px;
+	}
+}
+
+
