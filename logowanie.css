@@ -5,10 +5,10 @@ body
 	font-size: 20px;
 }
 
-
 .login
 {
 	background-color: #f9f9fc;
+	margin-top: 30px;
 	margin-left:auto;
 	margin-right:auto;
 	-webkit-box-shadow: 3px 3px 30px 5px rgba(204,204,204,0.9);
@@ -45,7 +45,7 @@ input[type=password]
 	background-color: #efefef;
 	color: #666;
 	border: 2px solid  #ddd;
-	border-radius: 5px;
+	border-radius: 10px;
 	font-size: 20px;
 	box-sizing: border-box;
 	outline: none;
@@ -71,7 +71,7 @@ input[type=submit]
 	color: white;
 	border-radius: 5px;
 	border: none;
-	border-radius: 5px;
+	border-radius: 20px;
 	cursor: pointer;
 	letter-spacing: 2px;
 	outline: none;

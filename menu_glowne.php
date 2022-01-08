@@ -1,3 +1,13 @@
+<?php
+    session_start();
+
+    if(!isset($_SESSION['zalogowany']))
+    {
+        header('Location: index.php');
+        exit();
+    }
+?>
+
 <!DOCTYPE HTML>
 <html lang="pl"> 
 <head> 
@@ -55,7 +65,7 @@
 							</li>
 			
 							<li class="nav-item px-lg-4 text-sm-left">
-								<a href="logowanie.html" class="nav-link">
+								<a href="logout.php" class="nav-link">
 									<div class="topMenu"><i class = "icon-power"></i>Wyloguj</div>
 								</a>
 							</li>

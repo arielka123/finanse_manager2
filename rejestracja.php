@@ -98,7 +98,7 @@ if(isset($_POST['username']))
 					if($connection->query("INSERT INTO users VALUES (NULL, '$username','$password_hash','$email')"))
 					{
 						$_SESSION['udanarejestracja']=true;
-						header('Location: hello.php');
+						header('Location: Witaj-w-AZET');
 
 					}
 					else 
