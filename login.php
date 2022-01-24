@@ -2,12 +2,12 @@
 
 session_start();
 
-/* if(!isset($_POST['login'])||(!isset($_POST['password'])))
+ if(!isset($_POST['login'])||(!isset($_POST['password'])))
 {
     header('Location: index.php');
     exit();
 }
- */
+
 
 
 require_once "connect.php";
@@ -39,6 +39,8 @@ else
             if(password_verify($password, $row['password']))
             {
                 $_SESSION['zalogowany']=true;
+                $_SESSION['userId']=$row['id'];
+                $_SESSION['username']=$row['username'];
 
                 unset($_SESSION['blad']);
                 $result->free_result();

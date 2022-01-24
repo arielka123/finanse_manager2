@@ -1,3 +1,15 @@
+<?php 
+
+session_start();
+
+if(!isset($_SESSION['zalogowany']))
+{	
+	header('Location:"Witaj-w-AZET"');
+	exit();	
+}
+
+?>
+
 <!DOCTYPE HTML>
 <html lang="pl"> 
 <head> 
@@ -22,7 +34,7 @@
 	<header>
 		<nav class="nav topNav1 navbar navbar-dark navbar-expand-lg p-1"> 
 			
-				<a href="menu_glowne.html" class="navbar-brand">  
+				<a href="menu_glowne.php" class="navbar-brand">  
 					<img src ="img/logo_transparent.png" class="d-inline-block ps-2 align-bottom" width=200vw height=auto alt="">
 				</a>
 
@@ -33,31 +45,31 @@
 				<div class="collapse navbar-collapse offset-xl-1" id="mainmenu">
 						<ul class="navbar-nav mr-auto">
 							<li class="nav-item px-lg-4  text-sm-left">
-								<a href = "dodaj_wydatek.html" class="nav-link">
+								<a href = "dodaj-wydatek" class="nav-link">
 									<div class="topMenu"><i class = "icon-edit"></i> Dodaj Wydatek </div>
 								</a>
 							</li>
 							
 							<li class="nav-item px-lg-4 text-sm-left">
-								<a href = "dodaj_wplyw.html" class="nav-link active">
+								<a href = "dodaj-wplyw" class="nav-link active">
 									<div class="topMenu"><i class = "icon-edit"></i> Dodaj Przychód </div>
 								</a>
 							</li>
 							
 							<li class="nav-item px-lg-4 text-sm-left">
-								<a href = "bilans.html" class="nav-link">
+								<a href = "bilans" class="nav-link">
 									<div class="topMenu"><i class = "icon-chart-bar"></i> Bilans </div>
 								</a>
 							</li>
 							
 							<li class="nav-item px-lg-4 text-sm-left">
-								<a href = "ustawienia.html" class="nav-link disabled">
+								<a href = "ustawienia" class="nav-link disabled">
 									<div class="topMenu"><i class = "icon-cogs"></i> Ustawienia </div>
 								</a>
 							</li>
 			
 							<li class="nav-item px-lg-4 text-sm-left">
-								<a href="logowanie.html" class="nav-link">
+								<a href="logout.php" class="nav-link">
 									<div class="topMenu"><i class = "icon-power"></i>Wyloguj</div>
 								</a>
 							</li>
@@ -76,7 +88,20 @@
 							</header>
 							<div class="mt-5 p-4 col-lg-6 offset-lg-3 offset-md-1">
 
-								<form action="order.php" method="post" enctype="multipart/form-data">		
+								<form action="incomes.php" method="post">	
+									
+									<?php 
+
+									if(isset($_SESSION['added_income']))
+									{
+
+										echo '<div class="col-12 text-success text-center fw-bolder h5 mb-4"> Dodano nowy przychód!</div>';
+										unset($_SESSION['added_income']);
+
+										//header( "refresh:2;url=dodaj_wydatek.php" );
+
+									}
+									?>
 
 									<div class= "form-group row pb-3">
 										<label for ="today" class="h6 offset-md-2 text-u col-form-label col-sm-2 ps-2"> Data</label>
@@ -84,41 +109,56 @@
 											 <input type="date"  id = "today" class="form-control" name="date" readonly>
 										</div>
 									</div>	
+
 																		
 									<div class = "form-group row pb-3">
 										<label for ="kwota" class="h6 offset-md-2 col-form-label col-sm-2 ps-2"> Kwota </label>
 										<div class="col col-sm-4">
-											<input type="text" class="form-control" name= "kwota" id="kwota"> 
+											<input type="text" class="form-control" name= "amount" id="amount"> 
 										</div>
+										
 									</div>
+
+									
+									<?php
+										if(isset($_SESSION['e_amount'])) 
+										{
+										echo  '<div class="col-md-10 col-8 text-danger text-center mb-2">'.$_SESSION['e_amount'].'</div>';
+										unset($_SESSION['added_income']);
+										unset($_SESSION['e_amount']);
+										}
+										
+									?>
+									
+
 																	
 									<div class= "row">
 										<fieldset class="mb-5 text-center">
 												<label class="h5 text-center text-uppercase m-2 pb-2 pt-4 w-100"> Wybierz kategorie przychodu </label>	
 
 												<div class="form-check form-check-inline"> 
-													 <input class="form-check-input" type="radio" name ="wplyw" id="radio1" value="1">
+													 <input class="form-check-input" type="radio" name ="wplyw" id="radio1" value="1" checked>
 													 <label class="form-check-label" for="radio1"> Wynagrodzenie  </label> 
 												</div>
 
 												<div class="form-check form-check-inline"> 
-													 <input class="form-check-input" type="radio" name ="wplyw" id="radio2" value="1">
+													 <input class="form-check-input" type="radio" name ="wplyw" id="radio2" value="2">
 													 <label class="form-check-label" for="radio2"> Odsetki bankowe</label>
 												</div>
 
 												<div class="form-check form-check-inline">
-													<input class="form-check-input" type="radio" name ="wplyw" id="radio3" value="1"> 
+													<input class="form-check-input" type="radio" name ="wplyw" id="radio3" value="3"> 
 													<label class="form-check-label" for="radio3"> Sprzedaż na allegro </label>
 												</div>
 												<div class="form-check form-check-inline">
-													 <input class="form-check-input" type="radio" name ="wplyw" id="radio4" value="1"> 
+													 <input class="form-check-input" type="radio" name ="wplyw" id="radio4" value="4"> 
 													 <label class="form-check-label" for="radio4"> Inne  </label> 
 												</div>
 										</fieldset>
 									</div>							
 									
 									<div class= "row">
-										<textarea class ="col-12" name="komentarz" id="komentarz" rows="4"  maxlength ="30" minlength ="5" placeholder="Dodaj komentarz (opcjonalnie)"></textarea>
+										<textarea class ="col-12" name="comment" id="comment" rows="4"  maxlength ="30" minlength ="5" placeholder="Dodaj komentarz (opcjonalnie)"></textarea>
 									</div>
 					
 									<div class ="row pt-4">

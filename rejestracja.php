@@ -98,8 +98,23 @@ if(isset($_POST['username']))
 					if($connection->query("INSERT INTO users VALUES (NULL, '$username','$password_hash','$email')"))
 					{
 						$_SESSION['udanarejestracja']=true;
-						header('Location: Witaj-w-AZET');
 
+						$connection->query("INSERT INTO incomes_category_assigned_to_users (id, name, user_id)
+					                SELECT null, def.name, u.id
+									FROM incomes_category_default as def
+									JOIN users as u on u.username = '$username'");
+
+						$connection->query("INSERT INTO expenses_category_assigned_to_users (id, name, user_id)
+									SELECT null, def.name, u.id
+									FROM expenses_category_default as def
+									JOIN users as u on u.username = '$username'");
+
+						$connection->query("INSERT INTO payment_methods_assigned_to_users (id, name, user_id)
+									SELECT null, def.name, u.id
+									FROM payment_methods_default as def
+									JOIN users as u on u.username = '$username'");
+
+						header('Location: Witaj-w-AZET');
 					}
 					else 
 					{

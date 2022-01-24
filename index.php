@@ -3,7 +3,7 @@
 
 	if(isset($_SESSION['zalogowany']))
 	{	
-		//unset($_SESSION['blad']);
+		unset($_SESSION['blad']);
 		header('Location:"menu_glowne.php"');
 		exit();	
 	}

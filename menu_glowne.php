@@ -30,7 +30,7 @@
 	<header>
 		<nav class="nav topNav1 navbar navbar-dark navbar-expand-lg p-1"> 
 			
-				<a href="menu_glowne.html" class="navbar-brand">  
+				<a href="menu_glowne.php" class="navbar-brand">  
 					<img src ="img/logo_transparent.png" class="d-inline-block ps-2 align-bottom" width=200vw alt="">
 				</a>
 
@@ -41,25 +41,25 @@
 				<div class="collapse navbar-collapse offset-xl-1" id="mainmenu">
 						<ul class="navbar-nav mr-auto">
 							<li class="nav-item px-lg-4  text-sm-left">
-								<a href = "dodaj_wydatek.html" class="nav-link">
+								<a href = "dodaj-wydatek" class="nav-link">
 									<div class="topMenu"><i class = "icon-edit"></i> Dodaj Wydatek </div>
 								</a>
 							</li>
 							
 							<li class="nav-item px-lg-4 text-sm-left">
-								<a href = "dodaj_wplyw.html" class="nav-link">
+								<a href = "dodaj-wplyw" class="nav-link">
 									<div class="topMenu"><i class = "icon-edit"></i> Dodaj Przychód </div>
 								</a>
 							</li>
 							
 							<li class="nav-item px-lg-4 text-sm-left">
-								<a href = "bilans.html" class="nav-link">
+								<a href = "bilans" class="nav-link">
 									<div class="topMenu"><i class = "icon-chart-bar"></i> Bilans </div>
 								</a>
 							</li>
 							
 							<li class="nav-item px-lg-4 text-sm-left">
-								<a href = "ustawienia.html" class="nav-link disabled">
+								<a href = "ustawienia" class="nav-link disabled">
 									<div class="topMenu"><i class = "icon-cogs"></i> Ustawienia </div>
 								</a>
 							</li>
@@ -82,7 +82,10 @@
 					<div class="row">
 						<div class="col-12">
 							<header>
-								<h1 class="h2 font-weight-bold text-uppercase ml-0 mb-4 mt-5 text-center text-md-left">Cześć, zaczynamy ? </h1>
+								<h1 class="h2 font-weight-bold text-uppercase ml-0 mb-4 mt-5 text-center text-md-left">Cześć 
+									<?php 
+									echo $_SESSION['username']; 
+									?>, zaczynamy ? </h1>
 							</header>
 								<div class="text-center mt-5 p-4">
 										<blockquote class="blockquote">

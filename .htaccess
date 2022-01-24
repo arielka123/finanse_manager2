@@ -7,3 +7,10 @@ Deny from all
 RewriteEngine on
 RewriteRule Witaj-w-AZET index.php
 RewriteRule strona-glowna menu_glowne.php
+RewriteRule dodaj-wydatek dodaj_wydatek.php
+RewriteRule dodaj-wplyw dodaj_wplyw.php
+RewriteRule ustawienia ustawienia.php
+RewriteRule bilans bilans.php
+
+
+
