@@ -29,10 +29,6 @@ if($connection->connect_errno!=0)
 else 
 {
 
-	if($result = @$connection->query(
-		sprintf("SELECT * FROM users WHERE id='%s'",
-				 mysqli_real_escape_string($connection,$_SESSION['id']))))
-	{
 		$date = $_POST['date'];
 		$amount = $_POST['amount'];
 		$id_expense_category =$_POST['wydatek'];
@@ -73,8 +69,6 @@ else
 		$_SESSION['added_expense']=true;
 
 		header('Location: dodaj-wydatek');
-
-	}
 
 
 	$connection->close();

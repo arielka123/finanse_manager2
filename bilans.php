@@ -1,3 +1,92 @@
+<?php
+    session_start();
+
+    if(!isset($_SESSION['zalogowany']))
+    {
+		header('Location:"Witaj-w-AZET"');       
+		exit();
+	
+	}
+
+	if(!isset($_SESSION['done']))
+    {
+		header('Location:period.php'); 
+		
+	}
+
+	$user_id= $_SESSION['userId'];
+
+	$date1=$_SESSION['date1'];
+    $date2=$_SESSION['date2'];
+	$year=date('Y');       
+	
+	// $file= fopen("sql_query_income_month.txt", "r") or die("Unable to open file!");
+
+	// $sql_income1= fread($file,filesize("sql_query_income_month.txt"));
+	// fclose($file);
+
+
+	$sql_income1="SELECT name, SUM(amount) as amount FROM incomes as i
+			Join incomes_category_assigned_to_users as x ON i.income_category_assigned_to_user_id=x.id
+			WHERE i.user_id='$user_id' AND 
+			i.date_of_income BETWEEN '$date1' AND '$date2'
+			GROUP BY name 
+			ORDER BY amount DESC;";
+
+	$sql_expense1="SELECT name, SUM(amount) as amount FROM expenses as e
+			Join expenses_category_assigned_to_users as x ON e.expense_category_assigned_to_user_id=x.id
+			WHERE e.user_id='$user_id' AND 
+			e.date_of_expense BETWEEN '$date1' AND '$date2'
+			GROUP BY name 
+			ORDER BY amount DESC;";
+
+	$sql_income_year="SELECT name, SUM(amount) as amount FROM incomes as i
+	        Join incomes_category_assigned_to_users as x ON i.income_category_assigned_to_user_id=x.id
+	        WHERE i.user_id='$user_id' AND 
+	        i.date_of_income LIKE '%$year%'
+	        GROUP BY name 
+	        ORDER BY amount DESC;";
+
+	$sql_expense_year="SELECT name, SUM(amount) as amount FROM expenses as e
+	        Join expenses_category_assigned_to_users as x ON e.expense_category_assigned_to_user_id=x.id
+	        WHERE e.user_id='$user_id' AND 
+	        e.date_of_expense LIKE '%$year%'
+	        GROUP BY name 
+	        ORDER BY amount DESC;";
+
+
+require_once "connect.php";
+
+$connection=@new mysqli($host, $db_user, $db_password, $db_name);
+
+if($connection->connect_errno!=0)
+{
+	echo "Error: ".$connection->connect_errno;
+}
+
+else{
+
+	if(isset($_SESSION['present_month']) ||isset($_SESSION['previous_month'])||isset($_SESSION['non_standard']) )
+	{
+		$result_income = $connection->query("$sql_income1");
+		$result_expense = $connection->query("$sql_expense1");
+	}
+	else if(isset($_SESSION['present_year']))
+	{
+		$result_income = $connection->query("$sql_income_year");
+		$result_expense = $connection->query("$sql_expense_year");
+	}
+	else 
+	{
+		echo "błąd daty";
+	}
+
+}
+ 
+ $connection->close();
+
+?>
+
 <!DOCTYPE HTML>
 <html lang="pl"> 
 <head> 
@@ -42,11 +131,11 @@
 
 </head>
 
-<body> 
+<body class="d-flex flex-column min-vh-100"> 
 	<header>
 		<nav class="nav topNav1 navbar navbar-dark navbar-expand-lg p-1"> 
 			
-				<a href="menu_glowne.php" class="navbar-brand">  
+				<a href="strona-glowna" class="navbar-brand">  
 					<img src ="img/logo_transparent.png" class="d-inline-block align-bottom" width=200vw height=auto alt="">
 				</a>
 
@@ -95,124 +184,231 @@
 			<article>
 				<div class="container-fluid">
 					<div class="row">
-									<header>
-										<h1 class="h2 font-weight-bold text-uppercase ml-0 mb-4 mt-5 text-center">Podsumowanie Twoich wydatków i przychodów </h1>
-									</header>
+						<header>
+							<h1 class="h2 font-weight-bold text-uppercase ml-0 mb-4 mt-5 text-center">Podsumowanie Twoich wydatków i przychodów </h1>
+						</header>
+						
+						<form action="period.php" method="post" enctype="multipart/form-data">
+							<div class="row">
+								<div id = "wybor" class= "h6 col text-center text-uppercase mb-md-4">
 									
-									<div class="row">
-										<div id = "wybor" class= "h6 col text-center text-uppercase mb-md-4">
-											<fieldset style="border:none;" class="border-bottom border-top pt-3 pb-2">
-												<legend class="fw-bolder pb-1"> Wybierz okres na bilans: </legend>	
+										<legend class="fw-bolder pb-2 d-block"> Wybierz okres na bilans: </legend>	
 
-												<div class="form-check form-check-inline">
-													<label for="radioB1"> Poprzedni </label> 
-													<input type="radio" name ="wybor" value="1" id="radioB1">
-												</div>
-												<div class="form-check form-check-inline">
-													<label for="radioB2"> Bierzący miesiąc </label>
-													<input type="radio" name ="wybor" value="1" id="radioB2">
-												</div>
-												<div class="form-check form-check-inline">
-													<label for="radioB3"> Następny </label>
-													<input type="radio" name ="wybor" value="1" id="radioB3">   
-												</div>
-												<div  class="form-check form-check-inline">
-													<label for="radioB4"> Niestandardowy </label>
-													<input type="radio" name ="wybor" value="1" id="radioB4"> 
-												</div>
-											</fieldset>
+										<div class="form-check form-check-inline mt-2">
+											<label  for="radioB1"> Poprzedni miesiąc </label> 
+												<?php
+													if(isset($_SESSION['previous_month']))
+													{
+														echo '<input  class="form-check-input" type="checkbox" name ="wybor" value="1" id="radioB1" checked>';
+													}
+													else {
+														echo '<input  class="form-check-input" type="radio" name ="wybor" value="1" id="radioB1">';
+													}
+												?>
+											
 										</div>
-									</div>
+										<div class="form-check form-check-inline mt-2">
+											<label for="radioB2"> Bieżący miesiąc </label>
+												<?php
+													if(isset($_SESSION['present_month']))
+													{
+														echo '<input class="form-check-input" type="radio" name ="wybor" value="2" id="radioB2" checked>';
+													}
+													else {
+														echo '<input class="form-check-input" type="radio" name ="wybor" value="2" id="radioB2">';
+													}
+												?>
+										</div>
+
+										<div class="form-check form-check-inline mt-2 ">
+											<label for="radioB3"> Bieżący rok </label>
+												<?php
+													if(isset($_SESSION['present_year']))
+													{
+														echo '<input class="form-check-input" type="radio" name ="wybor" value="3" id="radioB3" checked>';
+													}
+													else {
+														echo '<input class="form-check-input" type="radio" name ="wybor" value="3" id="radioB3">';
+													}
+												?>
+
+
+										</div>
+
+										<div   class=" col-2 form-check form-check-block pt-3 d-sm-block mx-sm-auto ms-3">
+											<label for="radioB4" class="pb-2 "> Niestandardowy </label>
+										
+												<?php
+													if(isset($_SESSION['non_standard']))
+													{
+														echo '<input class="form-check-input" type="radio" name ="wybor" value="4" id="radioB4" >';
+													}
+													else {
+														echo '<input class="form-check-input" type="radio" name ="wybor" value="4" id="radioB4">';
+													}
+
+												?>
+
+												<div class="d-block mt-2">
+														<input type="date"  id = "date1" class="form-control" name="date1">
+													
+												</div>
+
+												<div class="d-block mt-2">
+														<input type="date"  id = "date2" class="form-control" name="date2">
+												</div>
+
+												<!-- if(isset($_SESSION['e_date']))
+													{
+														echo '<div class="col-12 text-danger text-center h5 mt-4">'.$_SESSION['e_date'].'</div>';
+														unset($_SESSION['e_date']);
+													} -->
+
+												
+										</div>
+									
+								</div>
+								<div class="mt-2 d-block">
+									<input class="h6 col-md-auto col-10 px-5 py-3 d-block mx-auto " type="submit" value= "OK">  
+								</div>
+							</div>
+						</form>
+				
+						<div class="col-lg-6 mt-2 pt-lg-2 table-responsive offset-lg-3 d-block bg-white rounded px-1 mb-5">
+
+							<?php
+
+							if(isset($_SESSION['done']))
+							{
+								unset($_SESSION['done']);
+
+								if(isset($_SESSION['present_year']))
+								{
+									echo '<div div class="text-center fw-bolder h4" style="color:#000000; opacity:0.6; letter-spacing:2px;"> Sprawdzasz bilans roku '.$year.'</div>';
+
+								}
+								else
+								{
+									echo ' <div class="text-center fw-bolder h4" style="color:#000000; opacity:0.6; letter-spacing:2px;"> BILANS OD '.$date1." DO ".$date2.'</div>';
+								}
+
+							}
+							?>
+
+
+							<div id="piechart" class="col-lg-4 col-md-6 col-6 mb-3 d-block mx-auto"></div>
+
+							<table class="table table-hover my-2">
+								<thead>
+									<tr>
+										<th scope="col">Lp.</th>
+										<th scope="col">Kategoria przychodu</th>
+										<th scope="col">Kwota przychodu</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<?php	
+										$i=0;
+										$suma1=0;
 								
-									<div class="col-lg-6 mt-2 pt-lg-2 table-responsive offset-lg-3 d-block bg-white rounded px-1">
-										<div id="piechart" class="col-lg-4 col-md-6 col-6 mb-3 d-block mx-auto"></div>
+										while($row = mysqli_fetch_array($result_income))
+										{
 
-										<table class="table table-hover my-2">
-											<thead>
-												<tr>
-													<th scope="col">Lp.</th>
-													<th scope="col">Kategoria przychodu</th>
-													<th scope="col">Kwota</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<th scope="row">1.</th>
-													<td>Kategoria1</td>
-													<td>xxx zł</td>	
-												</tr>
-												<tr>
-													<th scope="row">2.</th>
-													<td>Kategoria2</td>
-													<td>xxx zł</td> 
-												</tr>
-												<tr>
-													<th scope="row">3.</th>
-													<td>Kategoria3</td>
-													<td>xxx zł</td>
-												</tr>
-												<tr>
-													<th scope="row">4.</th>
-													<td>Kategoria4</td>
-													<td>xxx zł</td>
-												</tr>
-												<tr class="table-warning fw-bold">
-													<td colspan="2" class="text-center text-uppercase">suma przychodów </td>
-													<td>xxx zł</td>
-												</tr>
+										$suma1 = $suma1 + $row['amount'];
+										$i = $i+1;
+										$name = $row['name'];
+										$amount = $row['amount'];
 
-											</tbody>
-											
-										</table>
+										echo<<<END
+										<tr>
+										<th scope="row">$i.</th>
+										<td>$name</td>
+										<td>$amount zł</td>
+										</tr>
+										
+										END;
+										}
+										
+									
+										echo '<tr class="table-warning fw-bold">
+										<td colspan="2" class="text-center text-uppercase">suma przychodów</td>';
+										echo "<td>".$suma1." zł</td>";
+										echo "</tr>";
 
-										<table class="table table-hover my-2">
-											<thead>
-												<tr>
-													<th scope="col">Lp.</th>
-													<th scope="col">Kategoria wydatku</th>
-													<th scope="col">Kwota</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<th scope="row">1.</th>
-													<td>Kategoria1</td>
-													<td>xxx zł</td>
-												</tr>
-												<tr>
-													<th scope="row">2.</th>
-													<td>Kategoria2</td>
-													<td>xxx zł</td>
-												</tr>
-												<tr>
-													<th scope="row">3.</th>
-													<td>Kategoria3</td>
-													<td>xxx zł</td>
-												</tr>
-												<tr>
-													<th scope="row">4.</th>
-													<td>Kategoria4</td>
-													<td>xxx zł</td>
-												</tr>
-												<tr class="table-warning fw-bold">
-													<td colspan="2" class="text-center text-uppercase">suma przychodów </td>
-													<td>xxx zł</td>
-												</tr>
-											</tbody>
-											
-										</table>
-									</div>
+									?>
+									
+								</tbody>
+								
+							</table>
+
+							<table class="table table-hover mt-5 mb-2">
+								<thead>
+									<tr>
+										<th scope="col">Lp.</th>
+										<th scope="col">Kategoria wydatku</th>
+										<th scope="col">Kwota wydatku</th>
+									</tr>
+								</thead>
+								<tbody>
+								
+									<?php
+
+										$i=0;
+										$suma2=0;
+										
+
+										while($row = mysqli_fetch_array($result_expense))
+										{
+
+										$suma2 = $suma2 + $row['amount'];
+										$i = $i+1;
+										$name = $row['name'];
+										$amount = $row['amount'];
+
+										echo<<<END
+										<tr>
+										<th scope="row">$i.</th>
+										<td>$name</td>
+										<td>$amount zł</td>
+										</tr>
+										
+										END;
+										}
+										
+										echo '<tr class="table-warning fw-bold">
+										<td colspan="2" class="text-center text-uppercase">suma wydatków </td>';
+										echo "<td>".$suma2." zł</td>";
+										echo "</tr>";
+
+									?>
+
+								</tbody>										
+							</table>
+
+							<?php
+								if($suma1>$suma2) echo '<div class= "bg-success text-light text-center fw-bold p-2 mt-3">'."ZAOSZCZĘDZONO: ".$suma1-$suma2." zł".'</div>';
+								else  echo '<div class= "bg-danger text-light text-center fw-bold p-2 mt-3">'."TWÓJ DEBET WYNOSI: ".$suma2-$suma1." zł".'</div>';						
+							
+							?>
+
+						</div>
 					</div>
 				</div>
 			</article>
+
 	</main>
-	
-	
-	<!-- <footer>
-		<div class ="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-				<p class="text-dark">Wszelkie prawa zastrzeżone &copy; </p>
+
+	<footer class="mt-auto">
+		<div class="card">
+		 <div class ="card-footer text-center text-muted pt-3">  
+					<p>Wszelkie prawa zastrzeżone &copy; </p>
+			</div>
 		</div>
-	</footer> -->
+	</footer>
+
+	
+	
 	
  <!-- <script src="jquery-1.11.3.min.js"></script>
 	

@@ -8,6 +8,27 @@ if(!isset($_SESSION['zalogowany']))
 	exit();	
 }
 
+require_once "connect.php";
+
+$connection=@new mysqli($host, $db_user, $db_password, $db_name);
+
+if($connection->connect_errno!=0)
+{
+	echo "Error: ".$connection->connect_errno;
+}
+
+else{
+
+$user_id= $_SESSION['userId'];
+
+
+$sql_query_category_income="SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id='$user_id'";
+
+$result_category_income = $connection->query("$sql_query_category_income");
+
+$connection->close();
+}
+
 ?>
 
 <!DOCTYPE HTML>
@@ -30,11 +51,11 @@ if(!isset($_SESSION['zalogowany']))
 
 </head>
 
-<body onload="set_today()"> 
+<body onload="set_today()"  class="d-flex flex-column min-vh-100"> 
 	<header>
 		<nav class="nav topNav1 navbar navbar-dark navbar-expand-lg p-1"> 
 			
-				<a href="menu_glowne.php" class="navbar-brand">  
+				<a href="strona-glowna" class="navbar-brand">  
 					<img src ="img/logo_transparent.png" class="d-inline-block ps-2 align-bottom" width=200vw height=auto alt="">
 				</a>
 
@@ -136,24 +157,21 @@ if(!isset($_SESSION['zalogowany']))
 										<fieldset class="mb-5 text-center">
 												<label class="h5 text-center text-uppercase m-2 pb-2 pt-4 w-100"> Wybierz kategorie przychodu </label>	
 
-												<div class="form-check form-check-inline"> 
-													 <input class="form-check-input" type="radio" name ="wplyw" id="radio1" value="1" checked>
-													 <label class="form-check-label" for="radio1"> Wynagrodzenie  </label> 
-												</div>
 
-												<div class="form-check form-check-inline"> 
-													 <input class="form-check-input" type="radio" name ="wplyw" id="radio2" value="2">
-													 <label class="form-check-label" for="radio2"> Odsetki bankowe</label>
-												</div>
+												<?php											
+										
+												while($row = mysqli_fetch_array($result_category_income))
+												{
+													$name = $row['name'];
+													$id = $row['id'];
 
-												<div class="form-check form-check-inline">
-													<input class="form-check-input" type="radio" name ="wplyw" id="radio3" value="3"> 
-													<label class="form-check-label" for="radio3"> Sprzedaż na allegro </label>
-												</div>
-												<div class="form-check form-check-inline">
-													 <input class="form-check-input" type="radio" name ="wplyw" id="radio4" value="4"> 
-													 <label class="form-check-label" for="radio4"> Inne  </label> 
-												</div>
+													
+													echo '<div class="form-check form-check-inline"> 
+													<input class="form-check-input" type="radio" name ="wplyw" id="radio.'.$id.'" value='.$id.' checked>
+													<label class="form-check-label" for="radio"'.$id.'>'.$name.'</label> 
+											   		</div>';
+												}																		
+												?>
 										</fieldset>
 									</div>							
 									
@@ -162,8 +180,9 @@ if(!isset($_SESSION['zalogowany']))
 									</div>
 					
 									<div class ="row pt-4">
-										 <input class="h6 col-auto d-block mx-auto" type="submit" value= "DODAJ" > 
-										 <input class="h6 col-auto d-block mx-auto" type="reset" value= "ANULUJ" > 
+										<input class="h6 col-auto d-block mx-auto" type="reset" value= "ANULUJ" >	
+										<input class="h6 col-auto d-block mx-auto" type="submit" value= "DODAJ" > 
+										  
 									</div>
 									
 								</form>
@@ -178,12 +197,14 @@ if(!isset($_SESSION['zalogowany']))
 			</article>
 	</main>
 	
-	
-	<!-- <footer>
-		<div class ="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-				<p class="text-dark">Wszelkie prawa zastrzeżone &copy; </p>
+	<footer class="mt-auto">
+		<div class="card">
+		 <div class ="card-footer text-center text-muted pt-3">  
+					<p>Wszelkie prawa zastrzeżone &copy; </p>
+			</div>
 		</div>
-	</footer> -->
+	</footer>
+	
 	
  <!-- <script src="jquery-1.11.3.min.js"></script>
 	

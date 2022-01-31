@@ -1,0 +1,6 @@
+SELECT name, SUM(amount) as amount FROM incomes as i
+			Join incomes_category_assigned_to_users as x ON i.income_category_assigned_to_user_id=x.id
+			WHERE i.user_id='$user_id' AND 
+			i.date_of_income BETWEEN '$date1' AND '$date2'
+			GROUP BY name 
+			ORDER BY amount DESC;

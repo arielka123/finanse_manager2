@@ -16,8 +16,6 @@ if(!isset($_POST['amount']))
 unset($_SESSION['added_income']);
 unset($_SESSION['e_amount']);
 
-
-
 require_once "connect.php";
 
 $connection=@new mysqli($host, $db_user, $db_password, $db_name);
@@ -29,12 +27,6 @@ if($connection->connect_errno!=0)
 }
 else 
 {
-
-	if($result = @$connection->query(
-		sprintf("SELECT * FROM users WHERE id='%s'",
-				 mysqli_real_escape_string($connection,$_SESSION['id']))))
-	{
-
 		$date = $_POST['date'];
 		$amount = $_POST['amount'];
 		$id_income_category =$_POST['wplyw'];
@@ -73,8 +65,6 @@ else
 		$_SESSION['added_income']=true;
 
 		header('Location: dodaj-wplyw');
-	}
-
 
 	$connection->close();
 }

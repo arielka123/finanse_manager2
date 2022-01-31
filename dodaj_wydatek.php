@@ -8,8 +8,34 @@ if(!isset($_SESSION['zalogowany']))
 	exit();	
 }
 
-?>
+require_once "connect.php";
 
+$connection=@new mysqli($host, $db_user, $db_password, $db_name);
+
+if($connection->connect_errno!=0)
+{
+	echo "Error: ".$connection->connect_errno;
+}
+
+else{
+
+$user_id= $_SESSION['userId'];
+
+
+$sql_query_payment="SELECT id, name FROM payment_methods_assigned_to_users WHERE user_id='$user_id';";
+
+$result_payment = $connection->query("$sql_query_payment");
+
+$sql_query_category_expense= "SELECT id, name FROM expenses_category_assigned_to_users WHERE user_id='$user_id'";
+
+$result_category_expense = $connection->query("$sql_query_category_expense");
+
+$connection->close();
+
+
+}
+
+?>
 
 <!DOCTYPE HTML>
 <html lang="pl"> 
@@ -31,11 +57,11 @@ if(!isset($_SESSION['zalogowany']))
 
 </head>
 
-<body onload="set_today()"> 
+<body onload="set_today()"  class="d-flex flex-column min-vh-100"> 
 	<header>
 		<nav class="nav topNav1 navbar navbar-dark navbar-expand-lg p-1"> 
 			
-				<a href="menu_glowne.php" class="navbar-brand">  
+				<a href="strona-glowna" class="navbar-brand">  
 					<img src ="img/logo_transparent.png" class="d-inline-block ps-2 align-bottom" width=200vw height=auto alt="">
 				</a>
 
@@ -91,18 +117,18 @@ if(!isset($_SESSION['zalogowany']))
 							<form action="expenses.php" method="post" enctype="multipart/form-data">
 								<div class="mt-5 p-4 col-lg-6 offset-lg-3 offset-md-1">
 
-								<?php 
+									<?php 
 
-								if(isset($_SESSION['added_expense']))
-								{
+									if(isset($_SESSION['added_expense']))
+									{
 
-									echo '<div class="col-12 text-success text-center fw-bolder h5 mb-4"> Dodano nowy wydatek!</div>';
-									unset($_SESSION['added_expense']);
-									unset($_SESSION['e_amount']);
+										echo '<div class="col-12 text-success text-center fw-bolder h5 mb-4"> Dodano nowy wydatek!</div>';
+										unset($_SESSION['added_expense']);
+										unset($_SESSION['e_amount']);
 
-									//header( "refresh:2;url=dodaj_wydatek.php" );
-								}
-								?>
+										//header( "refresh:2;url=dodaj_wydatek.php" );
+									}
+									?>
 
 									<div class= "form-group row pb-3">
 										<label for ="today" class="h6 offset-md-2 text-u col-form-label col-sm-2 ps-2"> Data</label>
@@ -122,109 +148,56 @@ if(!isset($_SESSION['zalogowany']))
 										<fieldset class="mb-5 text-md-center text-left">
 											<label class="h5 text-center text-uppercase m-2 pb-2 pt-4 w-100">Wybierz sposób płatności</label>	
 
-											<div class="form-check form-check-inline"> 
-												<input class="form-check-input" type="radio" name ="platnosc" id="radioP1" value="1" checked>
-												<label class="form-check-label" for="radioP1"> Gotówka </label> 
-											</div>
+											<?php
 
-											<div class="form-check form-check-inline"> 
-												<input class="form-check-input" type="radio" name ="platnosc" id="radioP2" value="2">
-												<label class="form-check-label" for="radioP2"> Karta debetowa</label>
-											</div>
+												while($row = mysqli_fetch_array($result_payment))
+											{
+												$name = $row['name'];
+												$id = $row['id'];
 
-											<div class="form-check form-check-inline">
-												<input class="form-check-input" type="radio" name ="platnosc" id="radioP3" value="3"> 
-												<label class="form-check-label" for="radioP3"> Karta kredytowa </label>
-											</div>
-											<div class="form-check form-check-inline">
-												<input class="form-check-input" type="radio" name ="platnosc" id="radioP4" value="1"> 
-												<label class="form-check-label" for="radioP4"> Inne </label> 
-											</div>
+												echo<<<END
+
+												<div class="form-check form-check-inline"> 
+												<input class="form-check-input" type="radio" name ="platnosc" id="radioP".$id value=$id checked>
+												<label class="form-check-label" for="radioP".$id> $name </label> 
+												</div>
+
+												END;
+
+											}
+
+
+											?>
+
 										</fieldset>
 									</div>
 								</div>
 
 								<div class= "row">
 									<div class="col-sm-12 mb-5">
-											<label class="h5 text-center text-uppercase pb-2 w-100"> Wybierz kategorie wydatku </label>		
+										<label class="h5 text-center text-uppercase pb-2 w-100"> Wybierz kategorie wydatku </label>		
 		
-											<div class="col_radio col-auto d-md-inline-block  offset-md-2 offset-lg-3 offset-xl-4">
-												<div class="form-check">
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW1" value="3" checked>
-													<label for="radioW1" class="form-check-label"> Jedzenie  </label>
-												</div>
-												<div class="form-check">
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW2" value="4">
-													<label for="radioW2" class="form-check-label"> Mieszkanie </label>
-												</div>
-												<div class="form-check">
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW3" value="1">
-													<label for="radioW3" class="form-check-label"> Transport </label> 
-												</div>
-												<div class="form-check">
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW4" value="5">
-													<label for="radioW4" class="form-check-label"> Telekomunikacja </label>
-												</div>
-												<div class="form-check">
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW5" value="6">
-													<label for="radioW5" class="form-check-label"> Opieka zdrowotna </label>
-												</div>
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW6" value="7">
-													<label for="radioW6" class="form-check-label"> Ubranie </label>
-												</div>
-											</div>
 											
-											<div class="col_radio col-auto d-md-inline-block">
+										<?php											
+										
+										echo '<div class="col-4 col-md-6 d-block mx-auto">';
 
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW7" value="8">
-													<label for="radioW7" class="form-check-label"> Higiena </label>
-												</div>
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW8" value="9">
-													<label for="radioW8" class="form-check-label"> Dzieci </label>
-												</div>
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW9" value="10">
-													<label for="radioW9" class="form-check-label"> Rozrywka </label>
-												</div>
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW10" value="11">
-													<label for="radioW10" class="form-check-label"> Wycieczka </label>
-												</div>
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW11" value="17">
-													<label for="radioW11" class="form-check-label">  Szkolenia </label>
-												</div>
-											</div>
+										while($row = mysqli_fetch_array($result_category_expense))
+										{
+											$name = $row['name'];
+											$id = $row['id'];
+
 											
-											<div class="col_radio col-auto d-md-inline-block">
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW12" value="2">
-													<label for="radioW12" class="form-check-label"> Książki</label>
-												</div>
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW13" value="12">
-													<label for="radioW13" class="form-check-label"> Oszczędności  </label>
-												</div>
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW14" value="13">
-													<label for="radioW14" class="form-check-label"> Na złotą jesień, czyli emeryturę  </label>
-												</div>
-												<div>
-													<input class="form-check-input"  type="radio" name ="wydatek" id="radioW15" value="14">
-													<label for="radioW15" class="form-check-label"> Spłata długów </label>
-												</div>
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW16" value="15">
-													<label for="radioW16" class="form-check-label"> Darowizna </label>
-												</div>
-												<div>
-													<input class="form-check-input" type="radio" name ="wydatek" id="radioW17" value="16">
-													<label for="radioW17" class="form-check-label">Inne wydatki</label>
-												</div>
-											</div>
+
+											echo '<div class="form-check form-check-inline mx-6 px-4 mx-lg-2">
+												<input class="form-check-input" type="radio" name ="wydatek" id="radioW'.$id.'" value='.$id.' checked>
+												<label for="radioW'.$id.'" class="form-check-label">'.$name.' </label>
+											</div>';
+	
+										}
+										echo '</div>';
+										
+										?>
 
 									</div>
 								</div>					
@@ -234,9 +207,10 @@ if(!isset($_SESSION['zalogowany']))
 								</div>
 							
 								<div class ="row pt-4">
-									<input class="h6 col-auto d-block mx-auto" type="submit" value= "DODAJ"> 
 									<input class="h6 col-auto d-block mx-auto" type="reset" value= "ANULUJ"> 
-								</div>		
+									<input class="h6 col-auto d-block mx-auto" type="submit" value= "DODAJ"> 
+								</div>
+
 							</form>
 						</div>
 					</div>
@@ -244,13 +218,16 @@ if(!isset($_SESSION['zalogowany']))
 
 			</article>
 	</main>
-	
-	
-	<!-- <footer>
-		<div class ="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-				<p class="text-dark">Wszelkie prawa zastrzeżone &copy; </p>
+
+	<footer class="mt-auto">
+		<div class="card">
+		 <div class ="card-footer text-center text-muted pt-3">  
+					<p>Wszelkie prawa zastrzeżone &copy; </p>
+			</div>
 		</div>
-	</footer> -->
+	</footer>
+	
+	
 	
  <!-- <script src="jquery-1.11.3.min.js"></script>
 	

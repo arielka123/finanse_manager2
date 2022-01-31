@@ -6,7 +6,6 @@ body
     font-size: 16px;
 	margin:0;
 	padding: 0;
-	
 }
 
 .topNav1
@@ -109,10 +108,10 @@ input[type=text], input[type=date]
 	border: 1px solid gray;
 }
 
-.col_radio
+/* .col_radio
 {
 	padding-right: 2vw;
-}
+} */
 
 .icon-edit {  font-size: 20px; padding-right:5px; color: #0fb493} 
 .icon-money {  font-size: 40px; padding:10px; color: #4db6ac} 
@@ -129,6 +128,7 @@ input[type=text], input[type=date]
 	font-weight:700;
 }
 
+
 @media(max-width:1200px)
 {
 	.topMenu
@@ -137,5 +137,4 @@ input[type=text], input[type=date]
 	padding:0px;
 	}
 }
-
 

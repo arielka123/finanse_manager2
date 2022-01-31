@@ -3,7 +3,7 @@
 
     if(!isset($_SESSION['zalogowany']))
     {
-        header('Location: index.php');
+        header('Location:"Witaj-w-AZET"');
         exit();
     }
 ?>
@@ -26,11 +26,11 @@
 
 </head>
 
-<body> 
+<body  class="d-flex flex-column min-vh-100"> 
 	<header>
 		<nav class="nav topNav1 navbar navbar-dark navbar-expand-lg p-1"> 
 			
-				<a href="menu_glowne.php" class="navbar-brand">  
+				<a href="strona-glowna" class="navbar-brand">  
 					<img src ="img/logo_transparent.png" class="d-inline-block ps-2 align-bottom" width=200vw alt="">
 				</a>
 
@@ -101,13 +101,15 @@
 				</div>
 			</article>
 	</main>
-	
-	
-	<!-- <footer>
-		<div class ="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-				<p class="text-dark">Wszelkie prawa zastrzeżone &copy; </p>
+
+	<footer class="mt-auto">
+		<div class="card">
+		 <div class ="card-footer text-center text-muted pt-3">  
+					<p>Wszelkie prawa zastrzeżone &copy; </p>
+			</div>
 		</div>
-	</footer> -->
+	</footer>
+	
 	
  <!-- <script src="jquery-1.11.3.min.js"></script>
 	
