@@ -26,7 +26,8 @@
   
 
 		$year=date('Y');          
-		$month=date('m');          
+		$month=date('m');
+        $day=date('d');          
 		$first_day="01"; 
         $date1;
         $date2;
@@ -77,30 +78,36 @@
         // non-standard
         else if($x=='4')
         {
-            $_SESSION['non_standard']=true;
-            if(isset($_POST['date1'])&& isset($_POST['date1']))
+            
+          //  $_SESSION['non_standard']=true;
+            if(isset($_POST['date1'])&& isset($_POST['date2']))
             {
+                $_SESSION['non_standard']=true;
                 $date1=$_POST['date1'];
                 $date2=$_POST['date2'];
-
-                $_SESSION['fr_date1']= $date1;
-                $_SESSION['fr_date2']= $date2;
             }
-            else $_SESSION['e_date']="Wybierz zakres dat!";
-        }else
-        {
-            $date1=$year."-".$month."-".$first_day;
-            $date2=date('Y-m-d');
-            $_SESSION['present_month']=true;
+                if (empty('date1') || !empty('date2')) 
+                {
+                $_SESSION['e_date'] = "Nie wybrano okresu na bilans! ";
+                }
+    
         }
-        
 
+        else
+            {
+                $_SESSION['e_date'] = "Nie wybrano okredu na bilans! ";
+
+            }
+
+
+        echo $_SESSION['e_date'];
         $_SESSION['done']=true;  
         $_SESSION['date1']= $date1;
         $_SESSION['date2']= $date2;  
         
-            
-        header('Location: bilans');
+       
+
+       header('Location: bilans');
 		
     }
 ?>

@@ -158,8 +158,8 @@ $connection->close();
 												echo<<<END
 
 												<div class="form-check form-check-inline"> 
-												<input class="form-check-input" type="radio" name ="platnosc" id="radioP".$id value=$id checked>
-												<label class="form-check-label" for="radioP".$id> $name </label> 
+												<input class="form-check-input" type="radio" name ="platnosc" id="radioP.$id" value=$id checked>
+												<label class="form-check-label" for="radioP.$id"> $name </label> 
 												</div>
 
 												END;

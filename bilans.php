@@ -66,19 +66,22 @@ if($connection->connect_errno!=0)
 
 else{
 
+
 	if(isset($_SESSION['present_month']) ||isset($_SESSION['previous_month'])||isset($_SESSION['non_standard']) )
 	{
 		$result_income = $connection->query("$sql_income1");
 		$result_expense = $connection->query("$sql_expense1");
+		$result_expense_pie=$connection->query("$sql_expense1");
 	}
 	else if(isset($_SESSION['present_year']))
 	{
 		$result_income = $connection->query("$sql_income_year");
 		$result_expense = $connection->query("$sql_expense_year");
+		$result_expense_pie=$connection->query("$sql_expense_year");
 	}
 	else 
 	{
-		echo "błąd daty";
+		$_SESSION['present_month']=true;
 	}
 
 }
@@ -103,28 +106,33 @@ else{
 	<link rel="stylesheet" href="css2/fontello.css" type="text/css">
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700&amp;subset=latin-ext" rel="stylesheet">
 
-    <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <script>
-      google.charts.load("current", {packages:["corechart"]});
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
-	  
+
       function drawChart() {
+
         var data = google.visualization.arrayToDataTable([
-          ['Kategoria', 'wydatki(w zł)'],
-          ['Kategoria1',  199],
-          ['Kategoria2',  786],
-          ['Kategoria3', 150],
-          ['Kategoria4', 234]
+          ['Kategoria', 'Suma wydatków'],
+        //  ['Work',     11],
+          <?php
+
+			while($chart = mysqli_fetch_assoc($result_expense_pie))
+			{
+				echo "['".$chart['name']."',".$chart['amount']."],";
+
+			}
+			
+		  ?>
         ]);
 
-      var options = {
-        legend: 'none',
-        pieSliceText: 'label',
-        // title: 'Twoje wydatki w danym okresie',
-        pieStartAngle: 100,
-      };
+        var options = {
+         // title: 'Moje wydatki'
+        };
 
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
         chart.draw(data, options);
       }
     </script>
@@ -134,9 +142,9 @@ else{
 <body class="d-flex flex-column min-vh-100"> 
 	<header>
 		<nav class="nav topNav1 navbar navbar-dark navbar-expand-lg p-1"> 
-			
+
 				<a href="strona-glowna" class="navbar-brand">  
-					<img src ="img/logo_transparent.png" class="d-inline-block align-bottom" width=200vw height=auto alt="">
+					<img src ="img/logo_transparent.png" class="d-inline-block ps-2 align-bottom" width=200vw height=auto alt="">
 				</a>
 
 				<button class="navbar-toggler order-first" type="button" data-bs-toggle="collapse" data-bs-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
@@ -184,22 +192,27 @@ else{
 			<article>
 				<div class="container-fluid">
 					<div class="row">
-						<header>
-							<h1 class="h2 font-weight-bold text-uppercase ml-0 mb-4 mt-5 text-center">Podsumowanie Twoich wydatków i przychodów </h1>
-						</header>
 						
 						<form action="period.php" method="post" enctype="multipart/form-data">
 							<div class="row">
-								<div id = "wybor" class= "h6 col text-center text-uppercase mb-md-4">
+								<div id = "wybor" class= "h6 col text-center text-uppercase mb-md-4 mt-5">
 									
 										<legend class="fw-bolder pb-2 d-block"> Wybierz okres na bilans: </legend>	
+	  									
+										<?php
+												if(isset($_SESSION['e_date']))
+													{
+														echo '<div class="col-12 text-danger text-center h6 p-2 mt-4">'.$_SESSION['e_date'].'</div>';
+														unset($_SESSION['e_date']);
+													}
+										?>
 
 										<div class="form-check form-check-inline mt-2">
 											<label  for="radioB1"> Poprzedni miesiąc </label> 
 												<?php
 													if(isset($_SESSION['previous_month']))
 													{
-														echo '<input  class="form-check-input" type="checkbox" name ="wybor" value="1" id="radioB1" checked>';
+														echo '<input  class="form-check-input" type="radio" name ="wybor" value="1" id="radioB1" checked>';
 													}
 													else {
 														echo '<input  class="form-check-input" type="radio" name ="wybor" value="1" id="radioB1">';
@@ -256,15 +269,9 @@ else{
 
 												<div class="d-block mt-2">
 														<input type="date"  id = "date2" class="form-control" name="date2">
+														
 												</div>
-
-												<!-- if(isset($_SESSION['e_date']))
-													{
-														echo '<div class="col-12 text-danger text-center h5 mt-4">'.$_SESSION['e_date'].'</div>';
-														unset($_SESSION['e_date']);
-													} -->
-
-												
+		
 										</div>
 									
 								</div>
@@ -274,29 +281,40 @@ else{
 							</div>
 						</form>
 				
-						<div class="col-lg-6 mt-2 pt-lg-2 table-responsive offset-lg-3 d-block bg-white rounded px-1 mb-5">
+						<div class="col-lg-6 mt-2 pt-lg-2 table-responsive offset-lg-3 d-block bg-white rounded px-1 mb-5 mt-5">
 
-							<?php
+							<div class="col-auto">
+								<div class="card m-auto">
+									<div class="card-header">
+										<h5 class="py-2 text-center fw-bolder" style="letter-spacing: 2px;"> <?php
 
-							if(isset($_SESSION['done']))
-							{
-								unset($_SESSION['done']);
+											if(isset($_SESSION['done']))
+											{
+												unset($_SESSION['done']);
 
-								if(isset($_SESSION['present_year']))
-								{
-									echo '<div div class="text-center fw-bolder h4" style="color:#000000; opacity:0.6; letter-spacing:2px;"> Sprawdzasz bilans roku '.$year.'</div>';
+												if(isset($_SESSION['present_year']))
+												{
+													echo 'PODSUMOWANIE MOICH WYDATKÓW W '.$year;
 
-								}
-								else
-								{
-									echo ' <div class="text-center fw-bolder h4" style="color:#000000; opacity:0.6; letter-spacing:2px;"> BILANS OD '.$date1." DO ".$date2.'</div>';
-								}
+												}
+												else
+												{
+													echo 'PODSUMOWANIE MOICH WYDATKÓW OD '.$date1." DO ".$date2;
+												}
 
-							}
-							?>
+											}
+											?>
+										</h5>
+									</div>
+									<div class="card-body">
 
+										<div id="piechart" class="col-auto max-width: 900px" style="height:300px;"></div>
 
-							<div id="piechart" class="col-lg-4 col-md-6 col-6 mb-3 d-block mx-auto"></div>
+									</div>
+
+								</div>
+						
+							</div>
 
 							<table class="table table-hover my-2">
 								<thead>
