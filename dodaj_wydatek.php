@@ -4,7 +4,7 @@ session_start();
 
 if(!isset($_SESSION['zalogowany']))
 {	
-	header('Location:"Witaj-w-AZET"');
+	header('Location:"index.php"');
 	exit();	
 }
 

@@ -4,7 +4,7 @@ session_start();
 
  if(!isset($_POST['login'])||(!isset($_POST['password'])))
 {
-    header('Location: index.php');
+    header('Location: Witaj-w-AZET');
     exit();
 }
 
@@ -47,10 +47,9 @@ else
                 header('Location: strona-glowna');
             } 
             else
-            {
-                
+            { 
                 $_SESSION['blad']='<span style="color:red">Nieprawidłowy login lub hasło!</span>';
-                echo $_SESSION['blad'];
+                //$_SESSION['blad'];
                 header('Location: Witaj-w-AZET');
             }
 
@@ -58,8 +57,8 @@ else
         else
         {
             $_SESSION['blad'] = '<span style="color:red">Nieprawidłowy login lub hasło!</span>';
-            echo $_SESSION['blad'];
-            header('Location: Witaj-w-AZET');
+           
+           header('Location: Witaj-w-AZET');
         }
     
     }

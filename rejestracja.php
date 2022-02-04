@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 if(isset($_POST['username']))
@@ -92,8 +91,6 @@ if(isset($_POST['username']))
 				if($all_ok==true)
 				{
 					//hurra, wszystkie testy zaliczone
-					echo "INSERT INTO users VALUES (NULL, '$username','$password','$email')";
-					echo "</br>";
 
 					if($connection->query("INSERT INTO users VALUES (NULL, '$username','$password_hash','$email')"))
 					{
@@ -113,14 +110,14 @@ if(isset($_POST['username']))
 									SELECT null, def.name, u.id
 									FROM payment_methods_default as def
 									JOIN users as u on u.username = '$username'");
-
-						header('Location: Witaj-w-AZET');
+									
+									
+						header('Location:Witaj-w-AZET');				
 					}
 					else 
 					{
 						throw new Exception($connection->error);
 					}
-
 				}
 
 				$connection->close();
@@ -131,12 +128,8 @@ if(isset($_POST['username']))
 			echo '<span style="color:red;">Błąd serwera! przepraszamy za niedogodnosci  i prosimy o rejestrację w innym terminie!</span>';
 			echo '<br/>Informacja developerska: '.$e;
 		}
-
-	
 }
-
 ?>
-
 
 <!DOCTYPE HTML>
 <html lang="pl"> 

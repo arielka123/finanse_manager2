@@ -3,7 +3,7 @@
 
     if(!isset($_SESSION['zalogowany']))
     {
-		header('Location:"Witaj-w-AZET"');       
+		header('Location:Witaj-w-AZET');       
 		exit();
 	
 	}
@@ -254,7 +254,7 @@ else{
 												<?php
 													if(isset($_SESSION['non_standard']))
 													{
-														echo '<input class="form-check-input" type="radio" name ="wybor" value="4" id="radioB4" >';
+														echo '<input class="form-check-input" type="radio" name ="wybor" value="4" id="radioB4" checked>';
 													}
 													else {
 														echo '<input class="form-check-input" type="radio" name ="wybor" value="4" id="radioB4">';
@@ -286,7 +286,7 @@ else{
 							<div class="col-auto">
 								<div class="card m-auto">
 									<div class="card-header">
-										<h5 class="py-2 text-center fw-bolder" style="letter-spacing: 2px;"> <?php
+										<h6 class="py-2 text-center fw-bolder" style="letter-spacing: px;"> <?php
 
 											if(isset($_SESSION['done']))
 											{
@@ -304,7 +304,7 @@ else{
 
 											}
 											?>
-										</h5>
+										</h6>
 									</div>
 									<div class="card-body">
 
@@ -405,8 +405,18 @@ else{
 							</table>
 
 							<?php
-								if($suma1>$suma2) echo '<div class= "bg-success text-light text-center fw-bold p-2 mt-3">'."ZAOSZCZĘDZONO: ".$suma1-$suma2." zł".'</div>';
-								else  echo '<div class= "bg-danger text-light text-center fw-bold p-2 mt-3">'."TWÓJ DEBET WYNOSI: ".$suma2-$suma1." zł".'</div>';						
+								
+
+								if($suma1>$suma2)
+								{
+									$difference= $suma1-$suma2;
+									echo '<div class= "bg-success text-light text-center fw-bold p-2 mt-3">'."ZAOSZCZĘDZONO: ".$difference." zł".'</div>';
+								} 
+								else  
+								{
+									$debt =  $suma2-$suma1;
+									echo '<div class= "bg-danger text-light text-center fw-bold p-2 mt-3">'."TWÓJ DEBET WYNOSI: ".$debt." zł".'</div>';
+								}						
 							
 							?>
 

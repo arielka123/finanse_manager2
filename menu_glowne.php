@@ -3,7 +3,7 @@
 
     if(!isset($_SESSION['zalogowany']))
     {
-        header('Location:"Witaj-w-AZET"');
+        header('Location:"index.php"');
         exit();
     }
 ?>
@@ -30,7 +30,7 @@
 	<header>
 		<nav class="nav topNav1 navbar navbar-dark navbar-expand-lg p-1"> 
 			
-				<a href="strona-glowna" class="navbar-brand">  
+				<a href="Witaj-w-AZET" class="navbar-brand">  
 					<img src ="img/logo_transparent.png" class="d-inline-block ps-2 align-bottom" width=200vw alt="">
 				</a>
 

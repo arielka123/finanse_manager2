@@ -4,13 +4,13 @@ session_start();
 
 if(!isset($_SESSION['zalogowany']))
 {	
-	header('Location:"Witaj-w-AZET"');
+	header('Location:"index.php"');
 	exit();	
 }
 
 if(!isset($_POST['amount']))
 {
-    header('Location: dodaj-wydatek');
+    header('Location: "dodaj_wydatek.php"');
     exit();
 }
 
@@ -45,14 +45,14 @@ else
 		if (is_numeric($amount)!=1)
 		{
 			$_SESSION['e_amount']="Wprowadzono niepoprawny format kwoty!";
-			header('Location: dodaj-wplyw');
+			header('Location: dodaj_wplyw.php');
 			exit();
 		}
 
 		if($amount<=0)
 		{
 			$_SESSION['e_amount']="Wprowadź kwotę większą od zera!";
-			header('Location: dodaj-wplyw');
+			header('Location: dodaj_wplyw.php');
 			exit();
 		}
 		
@@ -68,7 +68,7 @@ else
 
 		$_SESSION['added_expense']=true;
 
-		header('Location: dodaj-wydatek');
+		header('Location: dodaj_wydatek.php');
 
 
 	$connection->close();

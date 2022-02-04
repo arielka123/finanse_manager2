@@ -4,13 +4,20 @@ Order Allow,Deny
 Deny from all
 </FilesMatch>
 
-RewriteEngine on
+RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteRule ^ https://budget.arleta-madej.profesjonalnyprogramista.pl%{REQUEST_URI} [L,NE,R=301]
 RewriteRule Witaj-w-AZET index.php
 RewriteRule strona-glowna menu_glowne.php
 RewriteRule dodaj-wydatek dodaj_wydatek.php
 RewriteRule dodaj-wplyw dodaj_wplyw.php
 RewriteRule ustawienia ustawienia.php
+RewriteRule rejestracja rejestracja.php
 RewriteRule bilans bilans.php
+
+
+
 
 
 

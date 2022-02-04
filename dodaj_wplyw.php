@@ -4,7 +4,7 @@ session_start();
 
 if(!isset($_SESSION['zalogowany']))
 {	
-	header('Location:"Witaj-w-AZET"');
+	header('Location:"-AZET"');
 	exit();	
 }
 
@@ -84,7 +84,7 @@ $connection->close();
 							</li>
 							
 							<li class="nav-item px-lg-4 text-sm-left">
-								<a href = "ustawienia" class="nav-link disabled">
+								<a href = "ustawienia.php" class="nav-link disabled">
 									<div class="topMenu"><i class = "icon-cogs"></i> Ustawienia </div>
 								</a>
 							</li>

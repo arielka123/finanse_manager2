@@ -4,7 +4,7 @@
 	if(isset($_SESSION['zalogowany']))
 	{	
 		unset($_SESSION['blad']);
-		header('Location:"menu_glowne.php"');
+		header('Location:strona-glowna');
 		exit();	
 	}
 	
@@ -77,7 +77,7 @@
 					</form>
 
 					<div id="register" class="col-12 mt-2 mb-4 text-center">
-						Nowy w AZET ? <a href ="rejestracja.php"> Zarejestruj się </a>
+						Nowy w AZET ? <a href ="rejestracja"> Zarejestruj się </a>
 					</div>
 				</div>
 	
